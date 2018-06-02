@@ -1,6 +1,6 @@
 /*
  * pragmatickm-procedure-renderer-html - Procedures rendered as HTML in a Servlet environment.
- * Copyright (C) 2014, 2015, 2016, 2017  AO Industries, Inc.
+ * Copyright (C) 2014, 2015, 2016, 2017, 2018  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -50,6 +50,9 @@ final public class ProcedureHtmlRenderer {
 			procedure.getId(),
 			new MediaWriter(textInXhtmlAttributeEncoder, out)
 		);
+		// TODO: SemanticCMS 2.0: All CSS classes properly project prefixed:
+		// TODO: pragmatickm-procedure-renderer-html-table here, for example
+		// TODO: Or may be just pragmatickm-procedure-table since this CSS used by renderer-html only?
 		out.write("\" class=\"thinTable procedureTable\"");
 		if(style != null) {
 			out.write(" style=\"");
