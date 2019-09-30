@@ -68,8 +68,8 @@ along with pragmatickm-procedure-renderer-html.  If not, see <http://www.gnu.org
 								<!-- Direct -->
 								<link>https://aoindustries.com/ao-encoding/apidocs/</link>
 								<link>https://aoindustries.com/ao-io-buffer/apidocs/</link>
+								<link>https://aoindustries.com/ao-servlet-util/apidocs/</link>
 								<link>https://aoindustries.com/ao-taglib/apidocs/</link>
-								<link>https://aoindustries.com/aocode-public/apidocs/</link>
 								<link>https://pragmatickm.com/procedure/model/apidocs/</link>
 								<link>https://semanticcms.com/core/controller/apidocs/</link>
 								<link>https://semanticcms.com/core/model/apidocs/</link>
@@ -94,16 +94,16 @@ along with pragmatickm-procedure-renderer-html.  If not, see <http://www.gnu.org
 			</dependency>
 			<!-- Direct -->
 			<dependency>
-				<groupId>com.aoindustries</groupId><artifactId>ao-encoding</artifactId><version>1.8.0-POST-SNAPSHOT</version>
+				<groupId>com.aoindustries</groupId><artifactId>ao-encoding</artifactId><version>2.0.0-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>com.aoindustries</groupId><artifactId>ao-io-buffer</artifactId><version>3.0.1-POST-SNAPSHOT</version>
 			</dependency>
 			<dependency>
-				<groupId>com.aoindustries</groupId><artifactId>ao-taglib</artifactId><version>3.1.0-SNAPSHOT</version>
+				<groupId>com.aoindustries</groupId><artifactId>ao-servlet-util</artifactId><version>1.0.0-SNAPSHOT</version>
 			</dependency>
 			<dependency>
-				<groupId>com.aoindustries</groupId><artifactId>aocode-public</artifactId><version>3.0.0-POST-SNAPSHOT</version>
+				<groupId>com.aoindustries</groupId><artifactId>ao-taglib</artifactId><version>4.0.0-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>com.pragmatickm</groupId><artifactId>pragmatickm-procedure-model</artifactId><version>2.0.0-SNAPSHOT</version>
@@ -144,10 +144,10 @@ along with pragmatickm-procedure-renderer-html.  If not, see <http://www.gnu.org
 			<groupId>com.aoindustries</groupId><artifactId>ao-io-buffer</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.aoindustries</groupId><artifactId>ao-taglib</artifactId>
+			<groupId>com.aoindustries</groupId><artifactId>ao-servlet-util</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.aoindustries</groupId><artifactId>aocode-public</artifactId>
+			<groupId>com.aoindustries</groupId><artifactId>ao-taglib</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.pragmatickm</groupId><artifactId>pragmatickm-procedure-model</artifactId>

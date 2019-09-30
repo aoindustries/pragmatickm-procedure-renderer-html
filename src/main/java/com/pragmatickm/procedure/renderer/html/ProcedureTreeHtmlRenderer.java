@@ -22,11 +22,11 @@
  */
 package com.pragmatickm.procedure.renderer.html;
 
-import com.aoindustries.encoding.MediaWriter;
 import static com.aoindustries.encoding.TextInXhtmlAttributeEncoder.encodeTextInXhtmlAttribute;
 import static com.aoindustries.encoding.TextInXhtmlAttributeEncoder.textInXhtmlAttributeEncoder;
 import static com.aoindustries.encoding.TextInXhtmlEncoder.encodeTextInXhtml;
-import com.aoindustries.net.UrlUtils;
+import com.aoindustries.servlet.ServletUtil;
+import com.aoindustries.servlet.URIComponent;
 import static com.aoindustries.taglib.AttributeUtils.resolveValue;
 import com.pragmatickm.procedure.model.Procedure;
 import com.semanticcms.core.controller.CapturePage;
@@ -132,7 +132,6 @@ final public class ProcedureTreeHtmlRenderer {
 
 		if(out!=null) {
 			HtmlRenderer htmlRenderer = HtmlRenderer.getInstance(servletContext);
-			final String responseEncoding = response.getCharacterEncoding();
 			out.write("<li><a");
 			if(mainLinkToProcedure) {
 				String linkCssClass = htmlRenderer.getLinkCssClass(procedures.get(0));
@@ -147,24 +146,28 @@ final public class ProcedureTreeHtmlRenderer {
 			Integer index = pageIndex==null ? null : pageIndex.getPageIndex(pageRef);
 			if(index != null) {
 				out.write('#');
-				PageIndex.appendIdInPage(
-					index,
-					mainLinkToProcedure ? procedures.get(0).getId() : null,
-					new MediaWriter(textInXhtmlAttributeEncoder, out)
+				URIComponent.FRAGMENT.encode(
+					PageIndex.getRefId(
+						index,
+						mainLinkToProcedure ? procedures.get(0).getId() : null
+					),
+					response,
+					out,
+					textInXhtmlAttributeEncoder
 				);
 			} else {
 				encodeTextInXhtmlAttribute(
 					response.encodeURL(
-						UrlUtils.encodeUrlPath(
+						ServletUtil.encodeURI(
 							request.getContextPath() + bookRef.getPrefix() + pageRef.getPath(),
-							responseEncoding
+							response
 						)
 					),
 					out
 				);
 				if(mainLinkToProcedure) {
 					encodeTextInXhtmlAttribute('#', out);
-					encodeTextInXhtmlAttribute(procedures.get(0).getId(), out);
+					URIComponent.FRAGMENT.encode(procedures.get(0).getId(), response, out, textInXhtmlAttributeEncoder);
 				}
 			}
 			out.write("\">");
@@ -188,23 +191,28 @@ final public class ProcedureTreeHtmlRenderer {
 						out.write(" href=\"");
 						if(index != null) {
 							out.write('#');
-							PageIndex.appendIdInPage(
-								index,
-								procedure.getId(),
-								new MediaWriter(textInXhtmlAttributeEncoder, out)
+							URIComponent.FRAGMENT.encode(
+								PageIndex.getRefId(
+									index,
+									procedure.getId()
+								),
+								response,
+								out,
+								textInXhtmlAttributeEncoder
 							);
 						} else {
 							encodeTextInXhtmlAttribute(
 								response.encodeURL(
-									UrlUtils.encodeUrlPath(
+									ServletUtil.encodeURI(
 										request.getContextPath() + bookRef.getPrefix() + pageRef.getPath(),
-										responseEncoding
+										response
 									)
 								),
 								out
 							);
+							// TODO: Include all anchors inside response.encodeURL
 							encodeTextInXhtmlAttribute('#', out);
-							encodeTextInXhtmlAttribute(procedure.getId(), out);
+							URIComponent.FRAGMENT.encode(procedure.getId(), response, out, textInXhtmlAttributeEncoder);
 						}
 						out.write("\">");
 						encodeTextInXhtml(procedure.getLabel(), out);
