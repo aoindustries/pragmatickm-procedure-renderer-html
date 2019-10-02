@@ -25,8 +25,7 @@ package com.pragmatickm.procedure.renderer.html;
 import static com.aoindustries.encoding.TextInXhtmlAttributeEncoder.encodeTextInXhtmlAttribute;
 import static com.aoindustries.encoding.TextInXhtmlAttributeEncoder.textInXhtmlAttributeEncoder;
 import static com.aoindustries.encoding.TextInXhtmlEncoder.encodeTextInXhtml;
-import com.aoindustries.servlet.ServletUtil;
-import com.aoindustries.servlet.URIComponent;
+import com.aoindustries.net.URIEncoder;
 import static com.aoindustries.taglib.AttributeUtils.resolveValue;
 import com.pragmatickm.procedure.model.Procedure;
 import com.semanticcms.core.controller.CapturePage;
@@ -146,28 +145,26 @@ final public class ProcedureTreeHtmlRenderer {
 			Integer index = pageIndex==null ? null : pageIndex.getPageIndex(pageRef);
 			if(index != null) {
 				out.write('#');
-				URIComponent.FRAGMENT.encode(
+				URIEncoder.encodeURIComponent(
 					PageIndex.getRefId(
 						index,
 						mainLinkToProcedure ? procedures.get(0).getId() : null
 					),
-					response,
 					out,
 					textInXhtmlAttributeEncoder
 				);
 			} else {
 				encodeTextInXhtmlAttribute(
 					response.encodeURL(
-						ServletUtil.encodeURI(
-							request.getContextPath() + bookRef.getPrefix() + pageRef.getPath(),
-							response
+						URIEncoder.encodeURI(
+							request.getContextPath() + bookRef.getPrefix() + pageRef.getPath()
 						)
 					),
 					out
 				);
 				if(mainLinkToProcedure) {
 					encodeTextInXhtmlAttribute('#', out);
-					URIComponent.FRAGMENT.encode(procedures.get(0).getId(), response, out, textInXhtmlAttributeEncoder);
+					URIEncoder.encodeURIComponent(procedures.get(0).getId(), out, textInXhtmlAttributeEncoder);
 				}
 			}
 			out.write("\">");
@@ -191,28 +188,26 @@ final public class ProcedureTreeHtmlRenderer {
 						out.write(" href=\"");
 						if(index != null) {
 							out.write('#');
-							URIComponent.FRAGMENT.encode(
+							URIEncoder.encodeURIComponent(
 								PageIndex.getRefId(
 									index,
 									procedure.getId()
 								),
-								response,
 								out,
 								textInXhtmlAttributeEncoder
 							);
 						} else {
 							encodeTextInXhtmlAttribute(
 								response.encodeURL(
-									ServletUtil.encodeURI(
-										request.getContextPath() + bookRef.getPrefix() + pageRef.getPath(),
-										response
+									URIEncoder.encodeURI(
+										request.getContextPath() + bookRef.getPrefix() + pageRef.getPath()
 									)
 								),
 								out
 							);
 							// TODO: Include all anchors inside response.encodeURL
 							encodeTextInXhtmlAttribute('#', out);
-							URIComponent.FRAGMENT.encode(procedure.getId(), response, out, textInXhtmlAttributeEncoder);
+							URIEncoder.encodeURIComponent(procedure.getId(), out, textInXhtmlAttributeEncoder);
 						}
 						out.write("\">");
 						encodeTextInXhtml(procedure.getLabel(), out);
