@@ -23,7 +23,6 @@
 package com.pragmatickm.procedure.renderer.html;
 
 import static com.aoindustries.encoding.TextInXhtmlAttributeEncoder.encodeTextInXhtmlAttribute;
-import static com.aoindustries.encoding.TextInXhtmlAttributeEncoder.textInXhtmlAttributeEncoder;
 import static com.aoindustries.encoding.TextInXhtmlEncoder.encodeTextInXhtml;
 import com.aoindustries.net.URIEncoder;
 import static com.aoindustries.taglib.AttributeUtils.resolveValue;
@@ -140,33 +139,34 @@ final public class ProcedureTreeHtmlRenderer {
 					out.write('"');
 				}
 			}
-			out.write(" href=\"");
 			BookRef bookRef = pageRef.getBookRef();
 			Integer index = pageIndex==null ? null : pageIndex.getPageIndex(pageRef);
+			out.write(" href=\"");
+			StringBuilder href = new StringBuilder();
 			if(index != null) {
-				out.write('#');
+				href.append('#');
 				URIEncoder.encodeURIComponent(
 					PageIndex.getRefId(
 						index,
 						mainLinkToProcedure ? procedures.get(0).getId() : null
 					),
-					textInXhtmlAttributeEncoder,
-					out
+					href
 				);
 			} else {
-				encodeTextInXhtmlAttribute(
-					response.encodeURL(
-						URIEncoder.encodeURI(
-							request.getContextPath() + bookRef.getPrefix() + pageRef.getPath()
-						)
-					),
-					out
-				);
+				URIEncoder.encodeURI(request.getContextPath(), href);
+				URIEncoder.encodeURI(bookRef.getPrefix(), href);
+				URIEncoder.encodeURI(pageRef.getPath().toString(), href);
 				if(mainLinkToProcedure) {
-					encodeTextInXhtmlAttribute('#', out);
-					URIEncoder.encodeURIComponent(procedures.get(0).getId(), textInXhtmlAttributeEncoder, out);
+					href.append('#');
+					URIEncoder.encodeURIComponent(procedures.get(0).getId(), href);
 				}
 			}
+			encodeTextInXhtmlAttribute(
+				response.encodeURL(
+					href.toString()
+				),
+				out
+			);
 			out.write("\">");
 			encodeTextInXhtml(PageUtils.getShortTitle(parentPageRef, page), out);
 			if(index != null) {
@@ -186,29 +186,29 @@ final public class ProcedureTreeHtmlRenderer {
 							out.write('"');
 						}
 						out.write(" href=\"");
+						href.setLength(0);
 						if(index != null) {
-							out.write('#');
+							href.append('#');
 							URIEncoder.encodeURIComponent(
 								PageIndex.getRefId(
 									index,
 									procedure.getId()
 								),
-								textInXhtmlAttributeEncoder,
-								out
+								href
 							);
 						} else {
-							encodeTextInXhtmlAttribute(
-								response.encodeURL(
-									URIEncoder.encodeURI(
-										request.getContextPath() + bookRef.getPrefix() + pageRef.getPath()
-									)
-								),
-								out
-							);
-							// TODO: Include all anchors inside response.encodeURL
-							encodeTextInXhtmlAttribute('#', out);
-							URIEncoder.encodeURIComponent(procedure.getId(), textInXhtmlAttributeEncoder, out);
+							URIEncoder.encodeURI(request.getContextPath(), href);
+							URIEncoder.encodeURI(bookRef.getPrefix(), href);
+							URIEncoder.encodeURI(pageRef.getPath().toString(), href);
+							href.append('#');
+							URIEncoder.encodeURIComponent(procedure.getId(), href);
 						}
+						encodeTextInXhtmlAttribute(
+							response.encodeURL(
+								href.toString()
+							),
+							out
+						);
 						out.write("\">");
 						encodeTextInXhtml(procedure.getLabel(), out);
 						if(index != null) {
