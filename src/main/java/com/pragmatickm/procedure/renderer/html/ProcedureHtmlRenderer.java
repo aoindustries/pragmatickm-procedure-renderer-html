@@ -1,6 +1,6 @@
 /*
  * pragmatickm-procedure-renderer-html - Procedures rendered as HTML in a Servlet environment.
- * Copyright (C) 2014, 2015, 2016, 2017, 2018  AO Industries, Inc.
+ * Copyright (C) 2014, 2015, 2016, 2017, 2018, 2020  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -25,52 +25,51 @@ package com.pragmatickm.procedure.renderer.html;
 import com.aoindustries.encoding.Coercion;
 import com.aoindustries.encoding.MediaWriter;
 import static com.aoindustries.encoding.TextInXhtmlAttributeEncoder.textInXhtmlAttributeEncoder;
-import static com.aoindustries.encoding.TextInXhtmlEncoder.encodeTextInXhtml;
+import com.aoindustries.html.Html;
 import com.aoindustries.io.buffer.BufferResult;
 import com.pragmatickm.procedure.model.Procedure;
 import com.semanticcms.core.model.ElementContext;
 import com.semanticcms.core.model.NodeBodyWriter;
 import com.semanticcms.core.renderer.html.PageIndex;
 import java.io.IOException;
-import java.io.Writer;
 
 final public class ProcedureHtmlRenderer {
 
 	public static void writeProcedureTable(
 		PageIndex pageIndex,
-		Writer out,
+		Html html,
 		ElementContext context,
 		Object style,
 		Procedure procedure
 	) throws IOException {
-		out.write("<table id=\"");
+		html.out.write("<table id=\"");
 		PageIndex.appendIdInPage(
 			pageIndex,
 			procedure.getPage(),
 			procedure.getId(),
-			new MediaWriter(textInXhtmlAttributeEncoder, out)
+			new MediaWriter(textInXhtmlAttributeEncoder, html.out)
 		);
 		// TODO: SemanticCMS 2.0: All CSS classes properly project prefixed:
 		// TODO: pragmatickm-procedure-renderer-html-table here, for example
 		// TODO: Or may be just pragmatickm-procedure-table since this CSS used by renderer-html only?
-		out.write("\" class=\"thinTable procedureTable\"");
+		html.out.write("\" class=\"thinTable procedureTable\"");
 		if(style != null) {
-			out.write(" style=\"");
-			Coercion.write(style, textInXhtmlAttributeEncoder, out);
-			out.write('"');
+			html.out.write(" style=\"");
+			Coercion.write(style, textInXhtmlAttributeEncoder, html.out);
+			html.out.write('"');
 		}
-		out.write(">\n"
+		html.out.write(">\n"
 				+ "<thead><tr><th class=\"procedureTableHeader\"><div>");
-		encodeTextInXhtml(procedure.getLabel(), out);
-		out.write("</div></th></tr></thead>\n"
+		html.text(procedure.getLabel());
+		html.out.write("</div></th></tr></thead>\n"
 				+ "<tbody>\n");
 		BufferResult body = procedure.getBody();
 		if(body.getLength() > 0) {
-			out.write("<tr><td>\n");
-			body.writeTo(new NodeBodyWriter(procedure, out, context));
-			out.write("\n</td></tr>\n");
+			html.out.write("<tr><td>\n");
+			body.writeTo(new NodeBodyWriter(procedure, html.out, context));
+			html.out.write("\n</td></tr>\n");
 		}
-		out.write("</tbody>\n"
+		html.out.write("</tbody>\n"
 				+ "</table>");
 	}
 
