@@ -52,7 +52,7 @@ final public class ProcedureHtmlRenderer {
 		// TODO: SemanticCMS 2.0: All CSS classes properly project prefixed:
 		// TODO: pragmatickm-procedure-renderer-html-table here, for example
 		// TODO: Or may be just pragmatickm-procedure-table since this CSS used by renderer-html only?
-		html.out.write("\" class=\"thinTable procedureTable\"");
+		html.out.write("\" class=\"ao-grid procedureTable\"");
 		if(style != null) {
 			html.out.write(" style=\"");
 			Coercion.write(style, textInXhtmlAttributeEncoder, html.out);

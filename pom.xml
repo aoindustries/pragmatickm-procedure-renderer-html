@@ -73,6 +73,7 @@ along with pragmatickm-procedure-renderer-html.  If not, see <http://www.gnu.org
 								<link>https://aoindustries.com/ao-encoding/apidocs/</link>
 								<link>https://aoindustries.com/ao-io-buffer/apidocs/</link>
 								<link>https://aoindustries.com/ao-net-types/apidocs/</link>
+								<!-- No apidocs: <groupId>com.aoindustries</groupId><artifactId>ao-style</artifactId> -->
 								<link>https://aoindustries.com/ao-taglib/apidocs/</link>
 								<link>https://pragmatickm.com/procedure/model/apidocs/</link>
 								<link>https://semanticcms.com/core/controller/apidocs/</link>
@@ -105,6 +106,9 @@ along with pragmatickm-procedure-renderer-html.  If not, see <http://www.gnu.org
 			</dependency>
 			<dependency>
 				<groupId>com.aoindustries</groupId><artifactId>ao-net-types</artifactId><version>1.2.1-SNAPSHOT<!-- ${POST-SNAPSHOT} --></version>
+			</dependency>
+			<dependency>
+				<groupId>com.aoindustries</groupId><artifactId>ao-style</artifactId><version>1.0.0-SNAPSHOT<!-- ${POST-SNAPSHOT} --></version>
 			</dependency>
 			<dependency>
 				<groupId>com.aoindustries</groupId><artifactId>ao-taglib</artifactId><version>5.0.0-SNAPSHOT<!-- ${POST-SNAPSHOT} --></version>
@@ -149,6 +153,9 @@ along with pragmatickm-procedure-renderer-html.  If not, see <http://www.gnu.org
 		</dependency>
 		<dependency>
 			<groupId>com.aoindustries</groupId><artifactId>ao-net-types</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.aoindustries</groupId><artifactId>ao-style</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.aoindustries</groupId><artifactId>ao-taglib</artifactId>
