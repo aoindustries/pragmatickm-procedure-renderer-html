@@ -73,7 +73,7 @@ along with pragmatickm-procedure-renderer-html.  If not, see <http://www.gnu.org
 								<link>https://aoindustries.com/ao-encoding/apidocs/</link>
 								<link>https://aoindustries.com/ao-io-buffer/apidocs/</link>
 								<link>https://aoindustries.com/ao-net-types/apidocs/</link>
-								<!-- No apidocs: <groupId>com.aoindustries</groupId><artifactId>ao-style</artifactId> -->
+								<link>https://aoindustries.com/ao-style/apidocs/</link>
 								<link>https://aoindustries.com/ao-taglib/apidocs/</link>
 								<link>https://pragmatickm.com/procedure/model/apidocs/</link>
 								<link>https://semanticcms.com/core/controller/apidocs/</link>
