@@ -30,7 +30,7 @@
 * [Project Home](https://pragmatickm.com/procedure/renderer/html/)
 * [Changelog](https://pragmatickm.com/procedure/renderer/html/changelog)
 * [API Docs](https://pragmatickm.com/procedure/renderer/html/apidocs/)
-* [Maven Central Repository](https://search.maven.org/#search%7Cgav%7C1%7Cg:%22com.pragmatickm%22%20AND%20a:%22pragmatickm-procedure-renderer-html%22)
+* [Maven Central Repository](https://search.maven.org/artifact/com.pragmatickm/pragmatickm-procedure-renderer-html)
 * [GitHub](https://github.com/aoindustries/pragmatickm-procedure-renderer-html)
 
 ## Contact Us
