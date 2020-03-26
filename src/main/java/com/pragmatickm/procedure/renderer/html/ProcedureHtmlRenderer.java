@@ -47,7 +47,7 @@ final public class ProcedureHtmlRenderer {
 			pageIndex,
 			procedure.getPage(),
 			procedure.getId(),
-			new MediaWriter(textInXhtmlAttributeEncoder, html.out)
+			new MediaWriter(html.encodingContext, textInXhtmlAttributeEncoder, html.out)
 		);
 		html.out.write("\" class=\"ao-grid pragmatickm-procedure\"");
 		if(style != null) {
