@@ -1,6 +1,6 @@
 /*
  * pragmatickm-procedure-renderer-html - Procedures rendered as HTML in a Servlet environment.
- * Copyright (C) 2014, 2015, 2016, 2017, 2018, 2020  AO Industries, Inc.
+ * Copyright (C) 2014, 2015, 2016, 2017, 2018, 2020, 2021  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -22,11 +22,11 @@
  */
 package com.pragmatickm.procedure.renderer.html;
 
-import com.aoindustries.encoding.Coercion;
 import com.aoindustries.encoding.MediaWriter;
 import static com.aoindustries.encoding.TextInXhtmlAttributeEncoder.textInXhtmlAttributeEncoder;
 import com.aoindustries.html.Html;
 import com.aoindustries.io.buffer.BufferResult;
+import com.aoindustries.lang.Coercion;
 import com.pragmatickm.procedure.model.Procedure;
 import com.semanticcms.core.model.ElementContext;
 import com.semanticcms.core.model.NodeBodyWriter;
