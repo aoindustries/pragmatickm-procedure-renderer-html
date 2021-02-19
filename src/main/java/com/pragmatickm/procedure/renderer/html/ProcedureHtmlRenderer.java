@@ -24,7 +24,7 @@ package com.pragmatickm.procedure.renderer.html;
 
 import com.aoindustries.encoding.MediaWriter;
 import static com.aoindustries.encoding.TextInXhtmlAttributeEncoder.textInXhtmlAttributeEncoder;
-import com.aoindustries.html.Html;
+import com.aoindustries.html.Document;
 import com.aoindustries.io.buffer.BufferResult;
 import com.aoindustries.lang.Coercion;
 import com.pragmatickm.procedure.model.Procedure;
@@ -37,36 +37,36 @@ final public class ProcedureHtmlRenderer {
 
 	public static void writeProcedureTable(
 		PageIndex pageIndex,
-		Html html,
+		Document document,
 		ElementContext context,
 		Object style,
 		Procedure procedure
 	) throws IOException {
-		html.out.write("<table id=\"");
+		document.out.write("<table id=\"");
 		PageIndex.appendIdInPage(
 			pageIndex,
 			procedure.getPage(),
 			procedure.getId(),
-			new MediaWriter(html.encodingContext, textInXhtmlAttributeEncoder, html.out)
+			new MediaWriter(document.encodingContext, textInXhtmlAttributeEncoder, document.out)
 		);
-		html.out.write("\" class=\"ao-grid pragmatickm-procedure\"");
+		document.out.write("\" class=\"ao-grid pragmatickm-procedure\"");
 		if(style != null) {
-			html.out.write(" style=\"");
-			Coercion.write(style, textInXhtmlAttributeEncoder, html.out);
-			html.out.write('"');
+			document.out.write(" style=\"");
+			Coercion.write(style, textInXhtmlAttributeEncoder, document.out);
+			document.out.write('"');
 		}
-		html.out.write(">\n"
+		document.out.write(">\n"
 				+ "<thead><tr><th><div>");
-		html.text(procedure.getLabel());
-		html.out.write("</div></th></tr></thead>\n"
+		document.text(procedure.getLabel());
+		document.out.write("</div></th></tr></thead>\n"
 				+ "<tbody>\n");
 		BufferResult body = procedure.getBody();
 		if(body.getLength() > 0) {
-			html.out.write("<tr><td>\n");
-			body.writeTo(new NodeBodyWriter(procedure, html.out, context));
-			html.out.write("\n</td></tr>\n");
+			document.out.write("<tr><td>\n");
+			body.writeTo(new NodeBodyWriter(procedure, document.out, context));
+			document.out.write("\n</td></tr>\n");
 		}
-		html.out.write("</tbody>\n"
+		document.out.write("</tbody>\n"
 				+ "</table>");
 	}
 
