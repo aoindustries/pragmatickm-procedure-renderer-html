@@ -22,8 +22,8 @@
  */
 package com.pragmatickm.procedure.renderer.html;
 
-import static com.aoindustries.encoding.TextInXhtmlAttributeEncoder.encodeTextInXhtmlAttribute;
-import com.aoindustries.html.Document;
+import com.aoindustries.html.ListContent;
+import com.aoindustries.html.PalpableContent;
 import com.aoindustries.net.URIEncoder;
 import static com.aoindustries.taglib.AttributeUtils.resolveValue;
 import com.pragmatickm.procedure.model.Procedure;
@@ -98,14 +98,14 @@ final public class ProcedureTreeHtmlRenderer {
 		return hasProcedure;
 	}
 
-	private static void writePage(
+	private static <__ extends ListContent<__>> void writePage(
 		ServletContext servletContext,
 		HttpServletRequest request,
 		HttpServletResponse response,
 		Node currentNode,
 		Set<PageRef> pagesWithProcedures,
 		PageIndex pageIndex,
-		Document document,
+		__ content,
 		PageRef parentPageRef,
 		Page page
 	) throws IOException, ServletException {
@@ -127,20 +127,10 @@ final public class ProcedureTreeHtmlRenderer {
 			&& procedures.get(0).getLabel().equals(page.getShortTitle())
 		;
 
-		if(document != null) {
+		if(content != null) {
 			HtmlRenderer htmlRenderer = HtmlRenderer.getInstance(servletContext);
-			document.out.write("<li><a");
-			if(mainLinkToProcedure) {
-				String linkCssClass = htmlRenderer.getLinkCssClass(procedures.get(0));
-				if(linkCssClass != null) {
-					document.out.write(" class=\"");
-					encodeTextInXhtmlAttribute(linkCssClass, document.out);
-					document.out.write('"');
-				}
-			}
-			BookRef bookRef = pageRef.getBookRef();
 			Integer index = pageIndex==null ? null : pageIndex.getPageIndex(pageRef);
-			document.out.write(" href=\"");
+			BookRef bookRef = pageRef.getBookRef();
 			StringBuilder href = new StringBuilder();
 			if(index != null) {
 				href.append('#');
@@ -160,98 +150,97 @@ final public class ProcedureTreeHtmlRenderer {
 					URIEncoder.encodeURIComponent(procedures.get(0).getId(), href);
 				}
 			}
-			encodeTextInXhtmlAttribute(
-				response.encodeURL(
-					href.toString()
-				),
-				document.out
-			);
-			document.out.write("\">");
-			document.text(PageUtils.getShortTitle(parentPageRef, page));
-			if(index != null) {
-				document.out.write("<sup>[");
-				document.text(index + 1);
-				document.out.write("]</sup>");
-			}
-			document.out.write("</a>");
-			if(!mainLinkToProcedure) {
-				if(!procedures.isEmpty()) {
-					for(Procedure procedure : procedures) {
-						document.out.write("\n<div><a");
-						String linkCssClass = htmlRenderer.getLinkCssClass(procedure);
-						if(linkCssClass != null) {
-							document.out.write(" class=\"");
-							encodeTextInXhtmlAttribute(linkCssClass, document.out);
-							document.out.write('"');
-						}
-						document.out.write(" href=\"");
-						href.setLength(0);
-						if(index != null) {
-							href.append('#');
-							URIEncoder.encodeURIComponent(
-								PageIndex.getRefId(
-									index,
-									procedure.getId()
-								),
-								href
-							);
-						} else {
-							URIEncoder.encodeURI(request.getContextPath(), href);
-							URIEncoder.encodeURI(bookRef.getPrefix(), href);
-							URIEncoder.encodeURI(pageRef.getPath().toString(), href);
-							href.append('#');
-							URIEncoder.encodeURIComponent(procedure.getId(), href);
-						}
-						encodeTextInXhtmlAttribute(
-							response.encodeURL(
-								href.toString()
-							),
-							document.out
+			content.li__(li -> {
+				li.a()
+					.clazz(mainLinkToProcedure ? htmlRenderer.getLinkCssClass(procedures.get(0)) : null)
+					.href(response.encodeURL(href.toString()))
+				.__(a -> {
+					a.text(PageUtils.getShortTitle(parentPageRef, page));
+					if(index != null) {
+						a.sup__(sup -> sup
+							.text('[').text(index + 1).text(']')
 						);
-						document.out.write("\">");
-						document.text(procedure.getLabel());
-						if(index != null) {
-							document.out.write("<sup>[");
-							document.text(index + 1);
-							document.out.write("]</sup>");
-						}
-						document.out.write("</a></div>");
 					}
+				});
+				if(!mainLinkToProcedure) {
+					if(!procedures.isEmpty()) {
+						for(Procedure procedure : procedures) {
+							href.setLength(0);
+							if(index != null) {
+								href.append('#');
+								URIEncoder.encodeURIComponent(
+									PageIndex.getRefId(
+										index,
+										procedure.getId()
+									),
+									href
+								);
+							} else {
+								URIEncoder.encodeURI(request.getContextPath(), href);
+								URIEncoder.encodeURI(bookRef.getPrefix(), href);
+								URIEncoder.encodeURI(pageRef.getPath().toString(), href);
+								href.append('#');
+								URIEncoder.encodeURIComponent(procedure.getId(), href);
+							}
+							li.div__(div -> div
+								.a()
+									.clazz(htmlRenderer.getLinkCssClass(procedure))
+									.href(response.encodeURL(href.toString()))
+								.__(a -> {
+									a.text(procedure);
+									if(index != null) {
+										a.sup__(sup -> sup
+											.text('[').text(index + 1).text(']')
+										);
+									}
+								})
+							);
+						}
+					}
+				}
+				List<ChildRef> childRefs = NavigationTreeRenderer.filterPages(
+					page.getChildRefs(),
+					pagesWithProcedures
+				);
+				if(!childRefs.isEmpty()) {
+					li.ul__(ul -> {
+						// TODO: traversal
+						for(ChildRef childRef : childRefs) {
+							PageRef childPageRef = childRef.getPageRef();
+							assert SemanticCMS.getInstance(servletContext).getBook(childPageRef.getBookRef()).isAccessible()
+								: "pagesWithProcedures does not contain anything from missing books";
+							Page child = CapturePage.capturePage(servletContext, request, response, childPageRef, CaptureLevel.META);
+							writePage(servletContext, request, response, currentNode, pagesWithProcedures, pageIndex, ul, pageRef, child);
+						}
+					});
+				}
+			});
+		} else {
+			List<ChildRef> childRefs = NavigationTreeRenderer.filterPages(
+				page.getChildRefs(),
+				pagesWithProcedures
+			);
+			if(!childRefs.isEmpty()) {
+				// TODO: traversal
+				for(ChildRef childRef : childRefs) {
+					PageRef childPageRef = childRef.getPageRef();
+					assert SemanticCMS.getInstance(servletContext).getBook(childPageRef.getBookRef()).isAccessible()
+						: "pagesWithProcedures does not contain anything from missing books";
+					Page child = CapturePage.capturePage(servletContext, request, response, childPageRef, CaptureLevel.META);
+					writePage(servletContext, request, response, currentNode, pagesWithProcedures, pageIndex, null, pageRef, child);
 				}
 			}
 		}
-		List<ChildRef> childRefs = NavigationTreeRenderer.filterPages(
-			page.getChildRefs(),
-			pagesWithProcedures
-		);
-		if(!childRefs.isEmpty()) {
-			if(document != null) {
-				document.out.write("\n"
-					+ "<ul>\n");
-			}
-			// TODO: traversal
-			for(ChildRef childRef : childRefs) {
-				PageRef childPageRef = childRef.getPageRef();
-				assert
-					SemanticCMS.getInstance(servletContext).getBook(childPageRef.getBookRef()).isAccessible()
-					: "pagesWithProcedures does not contain anything from missing books"
-				;
-				Page child = CapturePage.capturePage(servletContext, request, response, childPageRef, CaptureLevel.META);
-				writePage(servletContext, request, response, currentNode, pagesWithProcedures, pageIndex, document, pageRef, child);
-			}
-			if(document != null) document.out.write("</ul>\n");
-		}
-		if(document != null) document.out.write("</li>\n");
 	}
 
 	/**
-	 * @param document  optional, null if no output needs to be written
+	 * @param content  optional, null if no output needs to be written
 	 */
-	public static void writeProcedureTree(
+	public static <__ extends PalpableContent<__>> void writeProcedureTree(
 		ServletContext servletContext,
 		HttpServletRequest request,
 		HttpServletResponse response,
-		Document document,
+		__ content,
 		Page root
 	) throws ServletException, IOException {
 		writeProcedureTree(
@@ -259,21 +248,21 @@ final public class ProcedureTreeHtmlRenderer {
 			null,
 			request,
 			response,
-			document,
+			content,
 			root
 		);
 	}
 
 	/**
-	 * @param document  optional, null if no output needs to be written
+	 * @param content  optional, null if no output needs to be written
 	 * @param root  either Page of ValueExpression that returns Page
 	 */
-	public static void writeProcedureTree(
+	public static <__ extends PalpableContent<__>> void writeProcedureTree(
 		ServletContext servletContext,
 		ELContext elContext,
 		HttpServletRequest request,
 		HttpServletResponse response,
-		Document document,
+		__ content,
 		Object root
 	) throws ServletException, IOException {
 		// Get the current capture state
@@ -286,19 +275,34 @@ final public class ProcedureTreeHtmlRenderer {
 			final Set<PageRef> pagesWithProcedures = new HashSet<>();
 			findProcedures(servletContext, request, response, pagesWithProcedures, rootPage);
 
-			if(document != null) document.out.write("<ul>\n");
-			writePage(
-				servletContext,
-				request,
-				response,
-				CurrentNode.getCurrentNode(request),
-				pagesWithProcedures,
-				PageIndex.getCurrentPageIndex(request),
-				document,
-				null,
-				rootPage
-			);
-			if(document != null) document.out.write("</ul>\n");
+			Node currentNode = CurrentNode.getCurrentNode(request);
+			PageIndex pageIndex = PageIndex.getCurrentPageIndex(request);
+
+			if(content != null) {
+				content.ul__(ul -> writePage(
+					servletContext,
+					request,
+					response,
+					currentNode,
+					pagesWithProcedures,
+					pageIndex,
+					ul,
+					null,
+					rootPage
+				));
+			} else {
+				writePage(
+					servletContext,
+					request,
+					response,
+					currentNode,
+					pagesWithProcedures,
+					pageIndex,
+					null,
+					null,
+					rootPage
+				);
+			}
 		}
 	}
 

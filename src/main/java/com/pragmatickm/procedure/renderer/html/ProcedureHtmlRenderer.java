@@ -22,11 +22,8 @@
  */
 package com.pragmatickm.procedure.renderer.html;
 
-import com.aoindustries.encoding.MediaWriter;
-import static com.aoindustries.encoding.TextInXhtmlAttributeEncoder.textInXhtmlAttributeEncoder;
-import com.aoindustries.html.Document;
+import com.aoindustries.html.PalpableContent;
 import com.aoindustries.io.buffer.BufferResult;
-import com.aoindustries.lang.Coercion;
 import com.pragmatickm.procedure.model.Procedure;
 import com.semanticcms.core.model.ElementContext;
 import com.semanticcms.core.model.NodeBodyWriter;
@@ -35,39 +32,41 @@ import java.io.IOException;
 
 final public class ProcedureHtmlRenderer {
 
-	public static void writeProcedureTable(
+	public static <__ extends PalpableContent<__>> void writeProcedureTable(
 		PageIndex pageIndex,
-		Document document,
+		__ content,
 		ElementContext context,
 		Object style,
 		Procedure procedure
 	) throws IOException {
-		document.out.write("<table id=\"");
-		PageIndex.appendIdInPage(
-			pageIndex,
-			procedure.getPage(),
-			procedure.getId(),
-			new MediaWriter(document.encodingContext, textInXhtmlAttributeEncoder, document.out)
+		content.table()
+			.id(idAttr -> PageIndex.appendIdInPage(
+				pageIndex,
+				procedure.getPage(),
+				procedure.getId(),
+				idAttr
+			))
+			.clazz("ao-grid", "pragmatickm-procedure")
+			.style(style)
+		.__(table -> table
+			.thead__(thead -> thead
+				.tr__(tr -> tr
+					.th__(th -> th
+						.div__(procedure)
+					)
+				)
+			)
+			.tbody__(tbody -> {
+				BufferResult body = procedure.getBody();
+				if(body.getLength() > 0) {
+					tbody.tr__(tr -> tr
+						.td__(td ->
+							body.writeTo(new NodeBodyWriter(procedure, td.getDocument().out, context))
+						)
+					);
+				}
+			})
 		);
-		document.out.write("\" class=\"ao-grid pragmatickm-procedure\"");
-		if(style != null) {
-			document.out.write(" style=\"");
-			Coercion.write(style, textInXhtmlAttributeEncoder, document.out);
-			document.out.write('"');
-		}
-		document.out.write(">\n"
-				+ "<thead><tr><th><div>");
-		document.text(procedure.getLabel());
-		document.out.write("</div></th></tr></thead>\n"
-				+ "<tbody>\n");
-		BufferResult body = procedure.getBody();
-		if(body.getLength() > 0) {
-			document.out.write("<tr><td>\n");
-			body.writeTo(new NodeBodyWriter(procedure, document.out, context));
-			document.out.write("\n</td></tr>\n");
-		}
-		document.out.write("</tbody>\n"
-				+ "</table>");
 	}
 
 	/**
