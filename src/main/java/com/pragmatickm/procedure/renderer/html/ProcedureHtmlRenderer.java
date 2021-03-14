@@ -22,8 +22,8 @@
  */
 package com.pragmatickm.procedure.renderer.html;
 
-import com.aoindustries.html.AnyDocument;
-import com.aoindustries.html.PalpableContent;
+import com.aoindustries.html.any.AnyDocument;
+import com.aoindustries.html.any.AnyPalpableContent;
 import com.aoindustries.io.buffer.BufferResult;
 import com.pragmatickm.procedure.model.Procedure;
 import com.semanticcms.core.model.ElementContext;
@@ -35,7 +35,7 @@ final public class ProcedureHtmlRenderer {
 
 	public static <
 		D extends AnyDocument<D>,
-		__ extends PalpableContent<D, __>
+		__ extends AnyPalpableContent<D, __>
 	> void writeProcedureTable(
 		PageIndex pageIndex,
 		__ content,
@@ -53,18 +53,18 @@ final public class ProcedureHtmlRenderer {
 			.clazz("ao-grid", "pragmatickm-procedure")
 			.style(style)
 		.__(table -> table
-			.thead__(thead -> thead
-				.tr__(tr -> tr
-					.th__(th -> th
+			.thead__any(thead -> thead
+				.tr__any(tr -> tr
+					.th__any(th -> th
 						.div__(procedure)
 					)
 				)
 			)
-			.tbody__(tbody -> {
+			.tbody__any(tbody -> {
 				BufferResult body = procedure.getBody();
 				if(body.getLength() > 0) {
-					tbody.tr__(tr -> tr
-						.td__(td ->
+					tbody.tr__any(tr -> tr
+						.td__any(td ->
 							body.writeTo(new NodeBodyWriter(procedure, td.getDocument().out, context))
 						)
 					);

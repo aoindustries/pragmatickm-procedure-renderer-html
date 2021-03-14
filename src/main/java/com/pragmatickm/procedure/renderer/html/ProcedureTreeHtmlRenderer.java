@@ -22,9 +22,9 @@
  */
 package com.pragmatickm.procedure.renderer.html;
 
-import com.aoindustries.html.AnyDocument;
-import com.aoindustries.html.ListContent;
-import com.aoindustries.html.PalpableContent;
+import com.aoindustries.html.any.AnyDocument;
+import com.aoindustries.html.any.AnyListContent;
+import com.aoindustries.html.any.AnyPalpableContent;
 import com.aoindustries.net.URIEncoder;
 import static com.aoindustries.taglib.AttributeUtils.resolveValue;
 import com.pragmatickm.procedure.model.Procedure;
@@ -99,17 +99,14 @@ final public class ProcedureTreeHtmlRenderer {
 		return hasProcedure;
 	}
 
-	private static <
-		D extends AnyDocument<D>,
-		__ extends ListContent<D, __>
-	> void writePage(
+	private static void writePage(
 		ServletContext servletContext,
 		HttpServletRequest request,
 		HttpServletResponse response,
 		Node currentNode,
 		Set<PageRef> pagesWithProcedures,
 		PageIndex pageIndex,
-		__ content,
+		AnyListContent<?, ?> content,
 		PageRef parentPageRef,
 		Page page
 	) throws IOException, ServletException {
@@ -154,14 +151,14 @@ final public class ProcedureTreeHtmlRenderer {
 					URIEncoder.encodeURIComponent(procedures.get(0).getId(), href);
 				}
 			}
-			content.li__(li -> {
+			content.li__any(li -> {
 				li.a()
 					.clazz(mainLinkToProcedure ? htmlRenderer.getLinkCssClass(procedures.get(0)) : null)
 					.href(response.encodeURL(href.toString()))
 				.__(a -> {
 					a.text(PageUtils.getShortTitle(parentPageRef, page));
 					if(index != null) {
-						a.sup__(sup -> sup
+						a.sup__any(sup -> sup
 							.text('[').text(index + 1).text(']')
 						);
 					}
@@ -186,14 +183,14 @@ final public class ProcedureTreeHtmlRenderer {
 								href.append('#');
 								URIEncoder.encodeURIComponent(procedure.getId(), href);
 							}
-							li.div__(div -> div
+							li.div__any(div -> div
 								.a()
 									.clazz(htmlRenderer.getLinkCssClass(procedure))
 									.href(response.encodeURL(href.toString()))
 								.__(a -> {
 									a.text(procedure);
 									if(index != null) {
-										a.sup__(sup -> sup
+										a.sup__any(sup -> sup
 											.text('[').text(index + 1).text(']')
 										);
 									}
@@ -207,7 +204,7 @@ final public class ProcedureTreeHtmlRenderer {
 					pagesWithProcedures
 				);
 				if(!childRefs.isEmpty()) {
-					li.ul__(ul -> {
+					li.ul__any(ul -> {
 						// TODO: traversal
 						for(ChildRef childRef : childRefs) {
 							PageRef childPageRef = childRef.getPageRef();
@@ -242,7 +239,7 @@ final public class ProcedureTreeHtmlRenderer {
 	 */
 	public static <
 		D extends AnyDocument<D>,
-		__ extends PalpableContent<D, __>
+		__ extends AnyPalpableContent<D, __>
 	> void writeProcedureTree(
 		ServletContext servletContext,
 		HttpServletRequest request,
@@ -266,7 +263,7 @@ final public class ProcedureTreeHtmlRenderer {
 	 */
 	public static <
 		D extends AnyDocument<D>,
-		__ extends PalpableContent<D, __>
+		__ extends AnyPalpableContent<D, __>
 	> void writeProcedureTree(
 		ServletContext servletContext,
 		ELContext elContext,
@@ -289,7 +286,7 @@ final public class ProcedureTreeHtmlRenderer {
 			PageIndex pageIndex = PageIndex.getCurrentPageIndex(request);
 
 			if(content != null) {
-				content.ul__(ul -> writePage(
+				content.ul__any(ul -> writePage(
 					servletContext,
 					request,
 					response,
