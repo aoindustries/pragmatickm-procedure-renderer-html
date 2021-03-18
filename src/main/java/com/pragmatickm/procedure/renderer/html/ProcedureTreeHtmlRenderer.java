@@ -22,7 +22,6 @@
  */
 package com.pragmatickm.procedure.renderer.html;
 
-import com.aoindustries.html.any.AnyDocument;
 import com.aoindustries.html.any.AnyListContent;
 import com.aoindustries.html.any.AnyPalpableContent;
 import com.aoindustries.net.URIEncoder;
@@ -237,14 +236,11 @@ final public class ProcedureTreeHtmlRenderer {
 	/**
 	 * @param content  optional, null if no output needs to be written
 	 */
-	public static <
-		D extends AnyDocument<D>,
-		__ extends AnyPalpableContent<D, __>
-	> void writeProcedureTree(
+	public static void writeProcedureTree(
 		ServletContext servletContext,
 		HttpServletRequest request,
 		HttpServletResponse response,
-		__ content,
+		AnyPalpableContent<?, ?> content,
 		Page root
 	) throws ServletException, IOException {
 		writeProcedureTree(
@@ -261,15 +257,12 @@ final public class ProcedureTreeHtmlRenderer {
 	 * @param content  optional, null if no output needs to be written
 	 * @param root  either Page of ValueExpression that returns Page
 	 */
-	public static <
-		D extends AnyDocument<D>,
-		__ extends AnyPalpableContent<D, __>
-	> void writeProcedureTree(
+	public static void writeProcedureTree(
 		ServletContext servletContext,
 		ELContext elContext,
 		HttpServletRequest request,
 		HttpServletResponse response,
-		__ content,
+		AnyPalpableContent<?, ?> content,
 		Object root
 	) throws ServletException, IOException {
 		// Get the current capture state

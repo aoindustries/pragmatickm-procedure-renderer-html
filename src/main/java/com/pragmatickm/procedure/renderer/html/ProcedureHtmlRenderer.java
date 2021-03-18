@@ -22,7 +22,6 @@
  */
 package com.pragmatickm.procedure.renderer.html;
 
-import com.aoindustries.html.any.AnyDocument;
 import com.aoindustries.html.any.AnyPalpableContent;
 import com.aoindustries.io.buffer.BufferResult;
 import com.pragmatickm.procedure.model.Procedure;
@@ -33,12 +32,9 @@ import java.io.IOException;
 
 final public class ProcedureHtmlRenderer {
 
-	public static <
-		D extends AnyDocument<D>,
-		__ extends AnyPalpableContent<D, __>
-	> void writeProcedureTable(
+	public static void writeProcedureTable(
 		PageIndex pageIndex,
-		__ content,
+		AnyPalpableContent<?, ?> content,
 		ElementContext context,
 		Object style,
 		Procedure procedure
@@ -65,7 +61,7 @@ final public class ProcedureHtmlRenderer {
 				if(body.getLength() > 0) {
 					tbody.tr__any(tr -> tr
 						.td__any(td ->
-							body.writeTo(new NodeBodyWriter(procedure, td.getDocument().out, context))
+							body.writeTo(new NodeBodyWriter(procedure, td.getUnsafe(), context))
 						)
 					);
 				}
