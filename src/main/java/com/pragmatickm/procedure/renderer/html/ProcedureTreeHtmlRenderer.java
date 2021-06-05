@@ -22,10 +22,10 @@
  */
 package com.pragmatickm.procedure.renderer.html;
 
-import com.aoindustries.html.any.AnyListContent;
-import com.aoindustries.html.any.AnyPalpableContent;
-import com.aoindustries.net.URIEncoder;
-import static com.aoindustries.taglib.AttributeUtils.resolveValue;
+import com.aoapps.html.any.AnyListContent;
+import com.aoapps.html.any.AnyPalpableContent;
+import com.aoapps.net.URIEncoder;
+import static com.aoapps.taglib.AttributeUtils.resolveValue;
 import com.pragmatickm.procedure.model.Procedure;
 import com.semanticcms.core.controller.CapturePage;
 import com.semanticcms.core.controller.PageUtils;

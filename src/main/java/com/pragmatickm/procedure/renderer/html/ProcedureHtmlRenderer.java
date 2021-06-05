@@ -22,8 +22,8 @@
  */
 package com.pragmatickm.procedure.renderer.html;
 
-import com.aoindustries.html.any.AnyPalpableContent;
-import com.aoindustries.io.buffer.BufferResult;
+import com.aoapps.html.any.AnyPalpableContent;
+import com.aoapps.io.buffer.BufferResult;
 import com.pragmatickm.procedure.model.Procedure;
 import com.semanticcms.core.model.ElementContext;
 import com.semanticcms.core.model.NodeBodyWriter;
