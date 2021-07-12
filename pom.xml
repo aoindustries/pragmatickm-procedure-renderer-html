@@ -38,6 +38,10 @@ along with pragmatickm-procedure-renderer-html.  If not, see <http://www.gnu.org
 / <a target="${javadoc.target}" href="https://pragmatickm.com/procedure/">Procedure</a>
 / <a target="${javadoc.target}" href="${project.url}">Renderer HTML</a>]]></javadoc.breadcrumbs>
 		<description.html><![CDATA[<a target="${javadoc.target}" href="https://pragmatickm.com/procedure/">Procedures</a> rendered as HTML in a Servlet environment.]]></description.html>
+		<!-- SonarCloud.io -->
+		<sonar.projectKey>${project.groupId}:${project.artifactId}</sonar.projectKey>
+		<sonar.organization>aoindustries</sonar.organization>
+		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 	</properties>
 
 	<name>PragmaticKM Procedure Renderer HTML²</name>
